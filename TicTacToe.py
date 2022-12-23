@@ -27,31 +27,23 @@ def newGame():
 # 9 5 1
 # 4 3 8
 
-def checkWin(grid):
-    arr = []
-    mult = [2, 7, 6, 9, 5, 1, 4, 3, 8]
-    for i in range(0,9):
-        arr.append(grid[i] * mult[i])    
-    if arr[0] + arr[1] + arr[2] == 15 or \
-        arr[3] + arr[4] + arr[5] == 15 or \
-        arr[3] + arr[4] + arr[5] == 15 or \
-        arr[0] + arr[3] + arr[6] == 15 or \
-        arr[1] + arr[4] + arr[7] == 15 or \
-        arr[2] + arr[5] + arr[8] == 15 or \
-        arr[0] + arr[4] + arr[8] == 15 or \
-        arr[2] + arr[4] + arr[6] == 15:
-        print("Player 1, (X's) Won!")
-        return 1
-    elif arr[0] + arr[1] + arr[2] == -15 or \
-        arr[3] + arr[4] + arr[5] == -15 or \
-        arr[3] + arr[4] + arr[5] == -15 or \
-        arr[0] + arr[3] + arr[6] == -15 or \
-        arr[1] + arr[4] + arr[7] == -15 or \
-        arr[2] + arr[5] + arr[8] == -15 or \
-        arr[0] + arr[4] + arr[8] == -15 or \
-        arr[2] + arr[4] + arr[6] == -15:
-        print("Player 2, (O's) Won!")
-        return -1
+def checkWin(arr):
+    print(arr)
+    if arr[0] == arr[1] == arr[2] != 0 or \
+        arr[3] == arr[4] == arr[5] != 0 or \
+        arr[6] == arr[7] == arr[8] != 0 or \
+        arr[0] == arr[3] == arr[6] != 0 or \
+        arr[1] == arr[4] == arr[7] != 0 or \
+        arr[2] == arr[5] == arr[8] != 0 or \
+        arr[0] == arr[4] == arr[8] != 0 or \
+        arr[2] == arr[4] == arr[6] != 0:
+        if player == 1:
+            print("Player 1, (X's) Won!")
+            return 1
+        else:
+            print("Player 2, (O's) Won!")
+            return -1
+
     if 0 not in game.grid:
         print("Everyone Loses! Yayyy")
         return 2
@@ -71,7 +63,6 @@ def printGrid(vis):
     print(disp[0], "|", disp[1], "|", disp[2])
     print(disp[3], "|", disp[4], "|", disp[5])
     print(disp[6], "|", disp[7], "|", disp[8])
-
 
 def checkMove(grid):
     move = int(input("Where do you want to go? (1-9):   "))
