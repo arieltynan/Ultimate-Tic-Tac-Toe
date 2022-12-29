@@ -22,11 +22,6 @@ def newGame():
     #Open = 0, XWin = 1, OWin = -1, Draw = 2
     return game
 
-
-# 2 7 6
-# 9 5 1
-# 4 3 8
-
 def checkWin(arr):
     print(arr)
     if arr[0] == arr[1] == arr[2] != 0 or \
@@ -64,9 +59,9 @@ def printGrid(vis):
     print(disp[3], "|", disp[4], "|", disp[5])
     print(disp[6], "|", disp[7], "|", disp[8])
 
-def checkMove(grid):
-    move = int(input("Where do you want to go? (1-9):   "))
-    while move > 10 or move < 0 or grid[int(move - 1)] != 0:
+def checkMove(grid,p):
+    move = int(input("Player " + str(p) + ", where do you want to go? (1-9):   "))
+    while move > 9 or move < 0 or grid[int(move - 1)] != 0:
         move = int(input("Pick a valid space (1-9):   "))
     return move
 
@@ -75,7 +70,7 @@ game = newGame()
 player = 1
 while game.state == 0:
     printGrid(game.grid)
-    move = checkMove(game.grid)
+    move = checkMove(game.grid, player)
     print(move)
     game.grid[(move)-1] = playMove(int(player))
     game.state = checkWin(game.grid)
