@@ -7,7 +7,7 @@ endGame = False
 turnCount = 0
 winner = ""
 
-
+ 
 def clicked(r,c):
 
     #player
