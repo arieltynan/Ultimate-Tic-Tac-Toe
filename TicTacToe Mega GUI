@@ -14,27 +14,29 @@ def clicked(r,c):
     global turnCount
     global gameState
 
+    turnCount += 1
+    b[r][c].config(state=DISABLED,
+                    text = Player1,
+                    bg = "pink"
+                    )
+
+    states[r][c] = Player1
+
+    if valids != []:
+        checkWinMinor()
+        checkWinMajor()
+        #print(valids)
+
+    #Checking if game is over before resetting
     if gameState == True:
-        turnCount += 1
-        b[r][c].config(state=DISABLED,
-                        text = Player1,
-                        bg = "pink"
-                        )
-
-        states[r][c] = Player1
-
-        if valids != []:
-            checkWinMinor()
-            checkWinMajor()
-            #print(valids)
         setBoard(r,c)
         reconfigure(board)
 
-        if Player1 == 'X':
-            Player1 = 'O'
-        elif Player1 == 'O':
-            Player1 = 'X'
-        #print(states)
+    if Player1 == 'X':
+        Player1 = 'O'
+    elif Player1 == 'O':
+        Player1 = 'X'
+    #print(states)
 
 def setBoard(r,c):
     global board #what board next turn is active in
