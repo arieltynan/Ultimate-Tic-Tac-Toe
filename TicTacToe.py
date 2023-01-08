@@ -1,7 +1,6 @@
-#Test
+#Non-GUI TicTacToe
+
 import pandas as pd 
-
-
 class Square:
     def ___init___(self, grid, state):
         #grid-array of 3x3 grid
