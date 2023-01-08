@@ -1,0 +1,249 @@
+#importing Packages from tkinter
+from tkinter import * 
+from tkinter import messagebox
+ 
+Player1 = "X"
+turnCount = 0
+winner = ""
+ 
+def clicked(r,c):
+    #player
+    global Player1
+    global turnCount
+    global states
+
+    #global valids
+    global nextBoard
+    global currValids
+    global nextValids
+
+    if checkWinMajor() == True:
+        currBoard = getBoard(r,c) #get current board
+        currValids = getValids(currBoard) #get current valid spaces on board 
+        turnCount += 1
+        b[r][c].config(state=DISABLED, #disable selected space, change color, add "X" or "O"
+                    text = Player1,
+                    bg = "pink"
+                    )
+
+        states[r][c] = Player1 #update position in states array
+
+        if turnCount == 1:
+            nextBoard = (setBoard(r,c))
+            nextValids = getValids(nextBoard)
+            reconfigure(nextBoard,nextValids)
+        else:
+            checkWinMinor(currValids,currBoard)
+            if checkWinMajor() == True:
+                nextBoard = (setBoard(r,c))
+                nextValids = getValids(nextBoard)
+                reconfigure(nextBoard,nextValids)
+                  
+    #Change players
+    if Player1 == 'X':
+        Player1 = 'O'
+    elif Player1 == 'O':
+        Player1 = 'X'
+
+#Gets Current board from coordinates
+def getBoard(r,c):
+    loc = [r,c]
+    if loc in [[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]]:
+        loc = 0
+    elif loc in  [[0,3],[0,4],[0,5],[1,3],[1,4],[1,5],[2,3],[2,4],[2,5]]:
+        loc = 1
+    elif loc in [[0,6],[0,7],[0,8],[1,6],[1,7],[1,8],[2,6],[2,7],[2,8]]:
+        loc = 2
+    elif loc in [[3,0],[3,1],[3,2],[4,0],[4,1],[4,2],[5,0],[5,1],[5,2]]:
+        loc = 3
+    elif loc in [[3,3],[3,4],[3,5],[4,3],[4,4],[4,5],[5,3],[5,4],[5,5]]:
+        loc = 4
+    elif loc in [[3,6],[3,7],[3,8],[4,6],[4,7],[4,8],[5,6],[5,7],[5,8]]:
+        loc = 5
+    elif loc in [[6,0],[6,1],[6,2],[7,0],[7,1],[7,2],[8,0],[8,1],[8,2]]:
+        loc = 6
+    elif loc in [[6,3],[6,4],[6,5],[7,3],[7,4],[7,5],[8,3],[8,4],[8,5]]:
+        loc = 7
+    elif loc in [[6,6],[6,7],[6,8],[7,6],[7,7],[7,8],[8,6],[8,7],[8,8]]:
+        loc = 8
+    return loc
+
+#Sets next board based on r,c of last move
+def setBoard(r,c):
+    if (r == 0 or r == 3 or r == 6) and (c == 0 or c == 3 or c == 6):
+        board = 0
+    if (r == 0 or r == 3 or r == 6) and (c == 1 or c == 4 or c == 7):
+        board = 1
+    if (r == 0 or r == 3 or r == 6) and (c == 2 or c == 5 or c == 8):
+        board = 2
+    if (r == 1 or r == 4 or r == 7) and (c == 0 or c == 3 or c == 6):
+        board = 3
+    if (r == 1 or r == 4 or r == 7) and (c == 1 or c == 4 or c == 7):
+        board = 4
+    if (r == 1 or r == 4 or r == 7) and (c == 2 or c == 5 or c == 8):
+        board = 5
+    if (r == 2 or r == 5 or r == 8) and (c == 0 or c == 3 or c == 6):
+        board = 6
+    if (r == 2 or r == 5 or r == 8) and (c == 1 or c == 4 or c == 7):
+        board = 7
+    if (r == 2 or r == 5 or r == 8) and (c == 2 or c == 5 or c == 8):
+        board = 8
+
+    return board
+
+#Gets valid spaces in selected board
+def getValids(board):
+    if board == 0:
+        valids = [[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]]
+    elif board == 1:
+        valids = [[0,3],[0,4],[0,5],[1,3],[1,4],[1,5],[2,3],[2,4],[2,5]]
+    elif board == 2:
+        valids = [[0,6],[0,7],[0,8],[1,6],[1,7],[1,8],[2,6],[2,7],[2,8]]
+    elif board == 3:
+        valids = [[3,0],[3,1],[3,2],[4,0],[4,1],[4,2],[5,0],[5,1],[5,2]]
+    elif board == 4:
+        valids = [[3,3],[3,4],[3,5],[4,3],[4,4],[4,5],[5,3],[5,4],[5,5]]
+    elif board == 5:
+        valids = [[3,6],[3,7],[3,8],[4,6],[4,7],[4,8],[5,6],[5,7],[5,8]]
+    elif board == 6:
+        valids = [[6,0],[6,1],[6,2],[7,0],[7,1],[7,2],[8,0],[8,1],[8,2]]
+    elif board == 7:
+        valids = [[6,3],[6,4],[6,5],[7,3],[7,4],[7,5],[8,3],[8,4],[8,5]]
+    elif board == 8:
+        valids = [[6,6],[6,7],[6,8],[7,6],[7,7],[7,8],[8,6],[8,7],[8,8]]
+    return valids
+
+#Reconfigures board after every turn
+def reconfigure(board, v): #v = valids
+    for i in range(9):
+        for j in range(9):
+            b[i][j].config(state=DISABLED)
+            if b[i][j]["bg"] != '#90EE90': #reset available spaces
+                b[i][j].config(bg="white")
+            
+    #Select board for next move, highlight available spaces in cyan        
+    for i in range(9):
+        for j in range(9):
+            index = [i,j]
+            if index in v and states[i][j] == 0:
+                b[i][j].config(state=NORMAL,
+                bg="cyan"
+                )
+            
+            elif states[i][j] != 0 and b[i][j]["bg"] != '#90EE90':
+                b[i][j].config(bg = "pink"
+                )
+    reset = True
+    for i in range(9):
+        for j in range(9):
+            #print(str(b[i][j]['state']))
+            if str(b[i][j]['state']) != "disabled":
+                reset = False
+    ## If game is over in small grid, next player can go anywhere when null grid is chosen ##
+    if reset == True: 
+        for i in range(9):
+            for j in range(9):
+                if states[i][j] == 0 and str(b[i][j]['bg']) != "90EE90":
+                    b[i][j].config(state=NORMAL,
+                    bg="cyan"
+                    )
+
+
+def checkWinMinor(x,board):
+    global winner
+    global boardStates
+
+    if (states[x[0][0]][x[0][1]] == states[x[1][0]][x[1][1]] == states[x[2][0]][x[2][1]] != 0 or \
+        states[x[3][0]][x[3][1]] == states[x[4][0]][x[4][1]] == states[x[5][0]][x[5][1]] != 0 or \
+        states[x[6][0]][x[6][1]] == states[x[7][0]][x[7][1]] == states[x[8][0]][x[8][1]] != 0 or \
+        states[x[0][0]][x[0][1]] == states[x[3][0]][x[3][1]] == states[x[6][0]][x[6][1]] != 0 or \
+        states[x[1][0]][x[1][1]] == states[x[4][0]][x[4][1]] == states[x[7][0]][x[7][1]] != 0 or \
+        states[x[2][0]][x[2][1]] == states[x[5][0]][x[5][1]] == states[x[8][0]][x[8][1]] != 0 or \
+        states[x[0][0]][x[0][1]] == states[x[4][0]][x[4][1]] == states[x[8][0]][x[8][1]] != 0 or \
+        states[x[2][0]][x[2][1]] == states[x[4][0]][x[4][1]] == states[x[6][0]][x[6][1]] != 0) and boardStates[board] == 0:
+        boardStates[board] = Player1
+        #print(boardStates)
+        print(f"Player {Player1} wins board {board}!") 
+        
+        for i in range(9):
+            states[x[i][0]][x[i][1]] = Player1
+            b[x[i][0]][x[i][1]].config(state=DISABLED,
+            text = "",
+            bg = '#90EE90'
+            )
+        b[x[4][0]][x[4][1]].config(state=DISABLED,
+            fg = "black",
+            text = Player1
+        )
+        return True
+
+def checkWinMajor():
+    gameState = True
+    if boardStates[0] == boardStates[1] == boardStates[2] != 0 or \
+        boardStates[3] == boardStates[4] == boardStates[5] != 0 or \
+        boardStates[6] == boardStates[7] == boardStates[8] != 0 or \
+        boardStates[0] == boardStates[4] == boardStates[8] != 0 or \
+        boardStates[2] == boardStates[4] == boardStates[6] != 0 or \
+        boardStates[0] == boardStates[3] == boardStates[6] != 0 or \
+        boardStates[1] == boardStates[4] == boardStates[7] != 0 or \
+        boardStates[2] == boardStates[5] == boardStates[8] != 0:
+        print(f"Player {Player1} wins the whole ass game!") # Design window
+
+        for i in range(9):
+            for j in range(9):
+                b[i][j].config(state=DISABLED)
+                if b[i][j]["bg"] == "cyan":
+                    b[i][j].config(bg = "white")
+        gameState = False
+    return gameState
+
+#Creating the Canvas
+root = Tk()
+# Title of the window            
+root.title("Ultimate TicTacToe") 
+root.resizable(0,0)
+
+#list of coordinates of valid squares within select sub-board
+valids = []
+
+#States of 9 sub-boards
+boardStates = [0,0,0,0,0,0,0,0,0]
+
+#Button
+b = [
+     [0,0,0,0,0,0,0,0,0],
+     [0,0,0,0,0,0,0,0,0],
+     [0,0,0,0,0,0,0,0,0],
+     [0,0,0,0,0,0,0,0,0],
+     [0,0,0,0,0,0,0,0,0],
+     [0,0,0,0,0,0,0,0,0],
+     [0,0,0,0,0,0,0,0,0],
+     [0,0,0,0,0,0,0,0,0],
+     [0,0,0,0,0,0,0,0,0]]
+
+mb = []
+ 
+#text for buttons
+states = [
+     [0,0,0,0,0,0,0,0,0],
+     [0,0,0,0,0,0,0,0,0],
+     [0,0,0,0,0,0,0,0,0],
+     [0,0,0,0,0,0,0,0,0],
+     [0,0,0,0,0,0,0,0,0],
+     [0,0,0,0,0,0,0,0,0],
+     [0,0,0,0,0,0,0,0,0],
+     [0,0,0,0,0,0,0,0,0],
+     [0,0,0,0,0,0,0,0,0]]
+
+for i in range(9):
+    for j in range(9):
+                                        
+        b[i][j] = Button(
+                        height = 1, width = 2,
+                        font = ("Helvetica","20"),
+                        command = lambda r = i, c = j : clicked(r,c),
+                        activebackground= 'blue'
+                        )
+        b[i][j].grid(row = i, column = j)
+
+mainloop()           
