@@ -23,7 +23,6 @@ def newGame():
     return game
 
 def checkWin(arr):
-    print(arr)
     if arr[0] == arr[1] == arr[2] != 0 or \
         arr[3] == arr[4] == arr[5] != 0 or \
         arr[6] == arr[7] == arr[8] != 0 or \
@@ -71,7 +70,6 @@ player = 1
 while game.state == 0:
     printGrid(game.grid)
     move = checkMove(game.grid, player)
-    print(move)
     game.grid[(move)-1] = playMove(int(player))
     game.state = checkWin(game.grid)
     if player == 1:
