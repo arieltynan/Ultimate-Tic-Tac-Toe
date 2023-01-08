@@ -246,6 +246,4 @@ for i in range(9):
                         )
         b[i][j].grid(row = i, column = j)
 
-    
- 
 mainloop()           
